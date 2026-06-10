@@ -1,93 +1,121 @@
-# latam-airlines-challenge
+# Software Engineer (ML & LLMs) Challenge
+
+## Overview
+
+Welcome to the **Software Engineer (ML & LLMs)** Application Challenge. In this, you will have the opportunity to get closer to a part of the reality of the role, and demonstrate your skills and knowledge in machine learning and cloud.
+
+## Problem
+
+A jupyter notebook (`exploration.ipynb`) has been provided with the work of a Data Scientist (from now on, the DS). The DS, trained a model to predict the probability of **delay** for a flight taking off or landing at SCL airport. The model was trained with public and real data, below we provide you with the description of the dataset:
+
+|Column|Description|
+|-----|-----------|
+|`Fecha-I`|Scheduled date and time of the flight.|
+|`Vlo-I`|Scheduled flight number.|
+|`Ori-I`|Programmed origin city code.|
+|`Des-I`|Programmed destination city code.|
+|`Emp-I`|Scheduled flight airline code.|
+|`Fecha-O`|Date and time of flight operation.|
+|`Vlo-O`|Flight operation number of the flight.|
+|`Ori-O`|Operation origin city code.|
+|`Des-O`|Operation destination city code.|
+|`Emp-O`|Airline code of the operated flight.|
+|`DIA`|Day of the month of flight operation.|
+|`MES`|Number of the month of operation of the flight.|
+|`AÑO`|Year of flight operation.|
+|`DIANOM`|Day of the week of flight operation.|
+|`TIPOVUELO`|Type of flight, I =International, N =National.|
+|`OPERA`|Name of the airline that operates.|
+|`SIGLAORI`|Name city of origin.|
+|`SIGLADES`|Destination city name.|
+
+In addition, the DS considered relevant the creation of the following columns:
+
+|Column|Description|
+|-----|-----------|
+|`high_season`|1 if `Date-I` is between Dec-15 and Mar-3, or Jul-15 and Jul-31, or Sep-11 and Sep-30, 0 otherwise.|
+|`min_diff`|difference in minutes between `Date-O` and `Date-I`|
+|`period_day`|morning (between 5:00 and 11:59), afternoon (between 12:00 and 18:59) and night (between 19:00 and 4:59), based on `Date-I`.|
+|`delay`|1 if `min_diff` > 15, 0 if not.|
+
+## Challenge
+
+### Instructions
+
+1. Create a repository in **github** and copy all the challenge content into it. Remember that the repository must be **public**.
+
+2. Use the **main** branch for any official release that we should review. It is highly recommended to use [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) development practices. **NOTE: do not delete your development branches.**
+   
+3. Please, do not change the structure of the challenge (names of folders and files).
+   
+4. All the documentation and explanations that you have to give us must go in the `challenge.md` file inside `docs` folder.
+
+5. To send your challenge, you must do a `POST` request to:
+    `https://advana-challenge-check-api-cr-k4hdbggvoq-uc.a.run.app/software-engineer`
+    This is an example of the `body` you must send:
+    ```json
+    {
+      "name": "Juan Perez",
+      "mail": "juan.perez@example.com",
+      "github_url": "https://github.com/juanperez/latam-challenge.git",
+      "api_url": "https://juan-perez.api"
+    }
+    ```
+    ##### ***PLEASE, SEND THE REQUEST ONCE.***
+
+    If your request was successful, you will receive this message:
+    ```json
+    {
+      "status": "OK",
+      "detail": "your request was received"
+    }
+    ```
 
 
+***NOTE: We recommend to send the challenge even if you didn't manage to finish all the parts.***
 
-## Getting started
+### Context:
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+We need to operationalize the data science work for the airport team. For this, we have decided to enable an `API` in which they can consult the delay prediction of a flight.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+*We recommend reading the entire challenge (all its parts) before you start developing.*
 
-## Add your files
+### Part I
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+In order to operationalize the model, transcribe the `.ipynb` file into the `model.py` file:
 
-```
-cd existing_repo
-git remote add origin https://gitlab.dataart.com/auribe/latam-airlines-challenge.git
-git branch -M master
-git push -uf origin master
-```
+- If you find any bug, fix it.
+- The DS proposed a few models in the end. Choose the best model at your discretion, argue why. **It is not necessary to make improvements to the model.**
+- Apply all the good programming practices that you consider necessary in this item.
+- The model should pass the tests by running `make model-test`.
 
-## Integrate with your tools
+> **Note:**
+> - **You cannot** remove or change the name or arguments of **provided** methods.
+> - **You can** change/complete the implementation of the provided methods.
+> - **You can** create the extra classes and methods you deem necessary.
 
-* [Set up project integrations](https://gitlab.dataart.com/auribe/latam-airlines-challenge/-/settings/integrations)
+### Part II
 
-## Collaborate with your team
+Deploy the model in an `API` with `FastAPI` using the `api.py` file.
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+- The `API` should pass the tests by running `make api-test`.
 
-## Test and Deploy
+> **Note:** 
+> - **You cannot** use other framework.
 
-Use the built-in continuous integration in GitLab.
+### Part III
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+Deploy the `API` in your favorite cloud provider (we recomend to use GCP).
 
-***
+- Put the `API`'s url in the `Makefile` (`line 26`).
+- The `API` should pass the tests by running `make stress-test`.
 
-# Editing this README
+> **Note:** 
+> - **It is important that the API is deployed until we review the tests.**
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Part IV
 
-## Suggestions for a good README
+We are looking for a proper `CI/CD` implementation for this development.
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- Create a new folder called `.github` and copy the `workflows` folder that we provided inside it.
+- Complete both `ci.yml` and `cd.yml`(consider what you did in the previous parts).
