@@ -1,3 +1,32 @@
-# syntax=docker/dockerfile:1.2
-FROM python:latest
-# put you docker configuration here
+# Install uv
+FROM ghcr.io/astral-sh/uv:python3.14-bookworm AS builder
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+ENV UV_PYTHON_DOWNLOADS=0
+
+# Change the working directory to the `app` directory
+WORKDIR /app
+
+# Install dependencies
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --no-install-project --no-dev
+
+# Copy the project into the intermediate image
+COPY src /app/src
+
+# Sync the project
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked
+
+FROM ghcr.io/astral-sh/uv:python3.14-bookworm-slim
+
+# Copy the environment, but not the source code
+COPY --from=builder --chown=app:app /app/.venv /app/.venv
+COPY --from=builder --chown=app:app /app/src /app/src
+ENV PATH="/app/.venv/bin:$PATH"
+
+WORKDIR /app
+
+# Run the application
+CMD ["fastapi", "run", "--workers", "1", "--host", "0.0.0.0", "--port", "8000", "challenge/main.py"]

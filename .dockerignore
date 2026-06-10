@@ -1,6 +1,21 @@
-# Reports
-reports/*
-!reports/*.gitkeep
+# Extra
+.dockerignore
+Dockerfile
+tests/
+.github/
+.dvc/
+docs/
+notebooks/
+.gitignore
+.pre-commit-config.yaml
+data.dvc
+compose.yml
+Makefile
+README.md
+.dvcignore
+.git/
+migrations/
+alembic.ini
 
 # Database
 *.db
@@ -163,6 +178,7 @@ activemq-data/
 
 # Environments
 .env
+.env.template
 .envrc
 .venv
 env/

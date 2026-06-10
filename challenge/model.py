@@ -1,58 +1,57 @@
 import pandas as pd
 
-from typing import Tuple, Union, List
 
 class DelayModel:
+    """Model for predicting flight delays."""
 
-    def __init__(
-        self
-    ):
-        self._model = None # Model should be saved in this attribute.
+    def __init__(self):
+        self._model = None  # Model should be saved in this attribute.
 
     def preprocess(
-        self,
-        data: pd.DataFrame,
-        target_column: str = None
-    ) -> Union(Tuple[pd.DataFrame, pd.DataFrame], pd.DataFrame):
+        self, data: pd.DataFrame, target_column: str | None = None
+    ) -> tuple[pd.DataFrame, pd.DataFrame] | pd.DataFrame:
         """
         Prepare raw data for training or predict.
 
-        Args:
-            data (pd.DataFrame): raw data.
-            target_column (str, optional): if set, the target is returned.
+        Parameters
+        ----------
+        data: pd.DataFrame
+            Raw data.
+        target_column: str | None
+            If set, the target is returned.
 
-        Returns:
-            Tuple[pd.DataFrame, pd.DataFrame]: features and target.
-            or
-            pd.DataFrame: features.
+        Returns
+        -------
+        Union[Tuple[pd.DataFrame, pd.DataFrame], pd.DataFrame]
+            Features and target if target_column is set, otherwise only features.
         """
-        return
+        return pd.DataFrame(), pd.DataFrame() if target_column else pd.DataFrame()
 
-    def fit(
-        self,
-        features: pd.DataFrame,
-        target: pd.DataFrame
-    ) -> None:
+    def fit(self, features: pd.DataFrame, target: pd.DataFrame) -> None:
         """
         Fit model with preprocessed data.
 
-        Args:
-            features (pd.DataFrame): preprocessed data.
-            target (pd.DataFrame): target.
-        """
-        return
-
-    def predict(
-        self,
+        Parameters
+        ----------
         features: pd.DataFrame
-    ) -> List[int]:
+            Preprocessed data.
+        target: pd.DataFrame
+            Target data.
+        """
+        return None
+
+    def predict(self, features: pd.DataFrame) -> list[int]:
         """
         Predict delays for new flights.
 
-        Args:
-            features (pd.DataFrame): preprocessed data.
-        
-        Returns:
-            (List[int]): predicted targets.
+        Parameters
+        ----------
+        features: pd.DataFrame
+            Preprocessed data.
+
+        Returns
+        -------
+        List[int]
+            Predicted targets.
         """
-        return
+        return [0] * features.shape[0]
