@@ -19,27 +19,34 @@ venv:			## Create a virtual environment
 
 .PHONY: install
 install:		## Install dependencies
-	pip install -r requirements-dev.txt
-	pip install -r requirements-test.txt
-	pip install -r requirements.txt
+	@echo "Installing Python"
+	uv python install
+	@echo "Installing dependencies"
+	uv sync --all-groups
+	@echo "Installing pre-commit hooks"
+	uv run pre-commit install
+	@echo "Updating pre-commit hooks"
+	uv run pre-commit autoupdate
 
-STRESS_URL = http://127.0.0.1:8000 
 .PHONY: stress-test
 stress-test:
-	# change stress url to your deployed app 
 	mkdir reports || true
-	locust -f tests/stress/api_stress.py --print-stats --html reports/stress-test.html --run-time 60s --headless --users 100 --spawn-rate 1 -H $(STRESS_URL)
+	uv run locust
 
 .PHONY: model-test
 model-test:			## Run tests and coverage
 	mkdir reports || true
-	pytest --cov-config=.coveragerc --cov-report term --cov-report html:reports/html --cov-report xml:reports/coverage.xml --junitxml=reports/junit.xml --cov=challenge tests/model
+	uv run pytest --cov=challenge tests/model
 
 .PHONY: api-test
 api-test:			## Run tests and coverage
 	mkdir reports || true
-	pytest --cov-config=.coveragerc --cov-report term --cov-report html:reports/html --cov-report xml:reports/coverage.xml --junitxml=reports/junit.xml --cov=challenge tests/api
+	uv run pytest  --cov=challenge tests/api
 
 .PHONY: build
 build:			## Build locally the python artifact
-	python setup.py bdist_wheel
+	uv build --wheel
+
+.PHONY: run
+run:			## Run the API locally
+	uv run fastapi run challenge/api.py --port 8000
