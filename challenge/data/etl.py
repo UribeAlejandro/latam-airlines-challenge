@@ -77,7 +77,7 @@ def transform_data(
     logger.info("Calculating delay column.")
     data["min_diff"] = data.apply(get_min_diff, axis=1)
     data["delay"] = np.where(data["min_diff"] > THRESHOLD_IN_MINUTES, 1, 0)
-    target = data["delay"].to_frame(name=target_column)
+    target = data["delay"].to_frame(name=target_column)  # pyrefly: ignore [missing-attribute]
     return features, target
 
 
