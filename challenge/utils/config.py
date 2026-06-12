@@ -21,6 +21,7 @@ class AppSettings(BaseSettings):
     project_name: str
     version: str
     description: str
+    mlflow_tracking_uri: str
 
 
 settings = AppSettings()
