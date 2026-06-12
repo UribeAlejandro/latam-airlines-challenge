@@ -3,12 +3,6 @@ name: 'Continuous Delivery'
 on:
   workflow_call:
 
-  workflow_dispatch:
-
-  push:
-    branches:
-      - main
-
 env: ${{ vars }}
 
 permissions:

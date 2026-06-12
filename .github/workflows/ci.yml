@@ -3,15 +3,6 @@ name: 'Continuous Integration'
 on:
   workflow_call:
 
-  workflow_dispatch:
-
-  push:
-
-  pull_request:
-    branches:
-      - develop
-      - main
-
 env: ${{ vars }}
 
 permissions:
