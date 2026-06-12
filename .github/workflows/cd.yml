@@ -1,7 +1,34 @@
 name: 'Continuous Delivery'
 
 on:
-  ...
+  workflow_call:
+
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+env: ${{ vars }}
+
+permissions:
+  contents: read
 
 jobs:
-  ...
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Build application
+        run: |
+          # TODO: Add build command(s) here
+          echo "Building application..."
+
+      - name: Deploy
+        run: |
+          # TODO: Add deployment command(s) here
+          echo "Deploying application..."
