@@ -8,14 +8,12 @@ on:
   push:
     branches:
       - main
-      - develop
 
 env: ${{ vars }}
 
 permissions:
   contents: read
   packages: read
-  id-token: 'write'
 
 jobs:
   deploy:
@@ -26,31 +24,12 @@ jobs:
       - name: Checkout repository code
         uses: actions/checkout@v6
 
-      - name: Authenticate to GCP
-        uses: google-github-actions/auth@v3
-        with:
-          token_format: access_token
-          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+      - name: Build application
+        run: |
+          # TODO: Add build command(s) here
+          echo "Building application..."
 
-      - name: Login to GCR
-        uses: docker/login-action@v4
-        with:
-          registry: ${{ secrets.GAR_LOCATION }}-docker.pkg.dev
-          username: oauth2accesstoken
-          password: ${{ steps.auth.outputs.access_token }}
-
-      - name: Build and Push
-        uses: docker/build-push-action@v7
-        with:
-          push: true
-          tags: |
-            ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.REPOSITORY }}/${{ secrets.SERVICE }}:${{ github.sha }}
-            ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.REPOSITORY }}/${{ secrets.SERVICE }}:latest
-
-      # - name: Deploy to Cloud Run
-      #   id: deploy
-      #   uses: google-github-actions/deploy-cloudrun@v3
-      #   with:
-      #     service: ${{ secrets.SERVICE }}
-      #     region: ${{ secrets.REGION }}
-      #     image: ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.REPOSITORY }}/${{ secrets.SERVICE }}:${{ github.sha }}
+      - name: Deploy
+        run: |
+          # TODO: Add deployment command(s) here
+          echo "Deploying application..."
