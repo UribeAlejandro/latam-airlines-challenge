@@ -16,16 +16,16 @@ env: ${{ vars }}
 
 permissions:
   contents: read
-  packages: write
+  packages: read
 
 jobs:
-  build:
-    name: Build
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install uv
         uses: astral-sh/setup-uv@v6
@@ -48,11 +48,11 @@ jobs:
 
   test:
     name: Test
-    needs: build
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install uv
         uses: astral-sh/setup-uv@v6
@@ -68,5 +68,34 @@ jobs:
       - name: Test with pytest
         run: |
           echo "Running tests..."
-          # make model-test
+          make model-test
           # make api-test
+
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Python
+        run: |
+          uv python install
+
+      - name: Install the project
+        run: |
+          uv sync --no-dev
+
+      - name: Build package
+        run: |
+          make build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package
+          path: dist/

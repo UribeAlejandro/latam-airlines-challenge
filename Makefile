@@ -10,12 +10,11 @@ help:             	## Show the help.
 
 .PHONY: venv
 venv:			## Create a virtual environment
+# 	@Checking uv installation ...
+# 	which uv > /dev/null || (echo "uv is not installed. Please install uv (https://pypi.org/project/uv/) and try again." && exit 1)
 	@echo "Creating virtualenv ..."
-	@rm -rf .venv
-	@python3 -m venv .venv
-	@./.venv/bin/pip install -U pip
-	@echo
-	@echo "Run 'source .venv/bin/activate' to enable the environment"
+	uv venv --clear
+	@echo "Virtualenv created at .venv"
 
 .PHONY: install
 install:		## Install dependencies
@@ -25,8 +24,6 @@ install:		## Install dependencies
 	uv sync --all-groups
 	@echo "Installing pre-commit hooks"
 	uv run pre-commit install
-	@echo "Updating pre-commit hooks"
-	uv run pre-commit autoupdate
 
 .PHONY: stress-test
 stress-test:

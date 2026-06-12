@@ -8,6 +8,10 @@ on:
       - main
       - develop
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
