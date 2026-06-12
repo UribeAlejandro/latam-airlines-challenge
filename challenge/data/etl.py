@@ -94,7 +94,7 @@ class ETL:
         data["delay"] = np.where(data["min_diff"] > THRESHOLD_IN_MINUTES, 1, 0)
 
         features = data[TOP_10_FEATURES]
-        target = data["delay"].to_frame(name=target_column)
+        target = data["delay"].to_frame(name=target_column)  # pyrefly: ignore [missing-attribute]
         return features, target
 
     @staticmethod
