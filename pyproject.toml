@@ -194,7 +194,6 @@ users = 100
 spawn-rate = 1
 run-time = "60s"
 print-stats = true
-host = "http://127.0.0.1:8000"
 html = "reports/stress-test.html"
 
 [tool.coverage.run]
