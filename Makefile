@@ -10,8 +10,6 @@ help:             	## Show the help.
 
 .PHONY: venv
 venv:			## Create a virtual environment
-# 	@Checking uv installation ...
-# 	which uv > /dev/null || (echo "uv is not installed. Please install uv (https://pypi.org/project/uv/) and try again." && exit 1)
 	@echo "Creating virtualenv ..."
 	uv venv --clear
 	@echo "Virtualenv created at .venv"
@@ -25,10 +23,11 @@ install:		## Install dependencies
 	@echo "Installing pre-commit hooks"
 	uv run pre-commit install
 
+STRESS_URL = https://flight-delay-api-493027879117.us-central1.run.app
 .PHONY: stress-test
 stress-test:
 	mkdir reports || true
-	uv run locust
+	uv run locust -H $(STRESS_URL)
 
 .PHONY: model-test
 model-test:			## Run tests and coverage
@@ -44,6 +43,14 @@ api-test:			## Run tests and coverage
 build:			## Build locally the python artifact
 	uv build --wheel
 
+.PHONY: build-docker
+build-docker:		## Build the docker image locally
+	docker build -t latam-challenge:latest .
+
 .PHONY: run
 run:			## Run the API locally
-	uv run fastapi dev challenge/api.py --port 8000
+	uv runfastapi dev challenge/api.py --port 8000
+
+.PHONY: run-docker
+run-docker:		## Run the API in a docker container
+	docker run --env-file .env -p 8000:8000 latam-challenge:latest

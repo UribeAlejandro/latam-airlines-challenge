@@ -12,21 +12,23 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --no-install-project --no-dev
 
 # Copy the project into the intermediate image
-COPY src /app/src
+COPY challenge /app/challenge
+COPY model /app/model
 
 # Sync the project
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --locked
+    uv sync --locked --no-dev
 
 FROM ghcr.io/astral-sh/uv:python3.14-bookworm-slim
 
 # Copy the environment, but not the source code
 COPY --from=builder --chown=app:app /app/.venv /app/.venv
-COPY --from=builder --chown=app:app /app/src /app/src
+COPY --from=builder --chown=app:app /app/challenge /app/challenge
+COPY --from=builder --chown=app:app /app/model /app/model
 ENV PATH="/app/.venv/bin:$PATH"
 
 WORKDIR /app
 
 # Run the application
-CMD ["fastapi", "run", "--workers", "1", "--host", "0.0.0.0", "--port", "8000", "challenge/main.py"]
+CMD ["fastapi", "run", "--workers", "1", "--host", "0.0.0.0", "--port", "8000", "challenge/api.py"]
