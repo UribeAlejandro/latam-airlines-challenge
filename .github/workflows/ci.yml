@@ -16,7 +16,7 @@ env: ${{ vars }}
 
 permissions:
   contents: read
-  packages: write
+  packages: read
 
 jobs:
   build:
@@ -68,5 +68,5 @@ jobs:
       - name: Test with pytest
         run: |
           echo "Running tests..."
-          # make model-test
+          make model-test
           # make api-test

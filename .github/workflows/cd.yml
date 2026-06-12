@@ -13,6 +13,7 @@ env: ${{ vars }}
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   deploy:
