@@ -1,75 +1,54 @@
-import unittest
-
 import pandas as pd
+from challenge.constants import TOP_10_FEATURES, TARGET_COL
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
-from tests.constants import DATA_PATH
 
 from challenge.model import DelayModel
 
 
-class TestModel(unittest.TestCase):
-    FEATURES_COLS = [
-        "OPERA_Latin American Wings",
-        "MES_7",
-        "MES_10",
-        "OPERA_Grupo LATAM",
-        "MES_12",
-        "TIPOVUELO_I",
-        "MES_4",
-        "MES_11",
-        "OPERA_Sky Airline",
-        "OPERA_Copa Air",
-    ]
+def test_model_preprocess_for_training(data: pd.DataFrame, model: DelayModel):
+    """Test the preprocess method of the DelayModel for training data."""
+    features, target = model.preprocess(data=data, target_column=TARGET_COL[0])
 
-    TARGET_COL = ["delay"]
+    assert isinstance(features, pd.DataFrame)
+    assert features.shape[1] == len(TOP_10_FEATURES)
+    assert set(features.columns) == set(TOP_10_FEATURES)
 
-    def setUp(self) -> None:
-        super().setUp()
-        self.model = DelayModel()
-        self.data = pd.read_csv(filepath_or_buffer=DATA_PATH)
+    assert isinstance(target, pd.DataFrame)
+    assert target.shape[1] == len(TARGET_COL)
+    assert set(target.columns) == set(TARGET_COL)
 
-    def test_model_preprocess_for_training(self):
-        features, target = self.model.preprocess(data=self.data, target_column="delay")
+def test_model_preprocess_for_serving(data: pd.DataFrame, model: DelayModel):
+    """Test the preprocess method of the DelayModel for serving data."""
+    features = model.preprocess(data=data)
 
-        assert isinstance(features, pd.DataFrame)
-        assert features.shape[1] == len(self.FEATURES_COLS)
-        assert set(features.columns) == set(self.FEATURES_COLS)
+    assert isinstance(features, pd.DataFrame)
+    assert features.shape[1] == len(TOP_10_FEATURES)
+    assert set(features.columns) == set(TOP_10_FEATURES)
 
-        assert isinstance(target, pd.DataFrame)
-        assert target.shape[1] == len(self.TARGET_COL)
-        assert set(target.columns) == set(self.TARGET_COL)
+def test_model_fit(data: pd.DataFrame, model: DelayModel):
+    """Test the fit method of the DelayModel."""
+    features, target = model.preprocess(data=data, target_column=TARGET_COL[0])
+    _, features_validation, _, target_validation = train_test_split(
+        features, target, test_size=0.33, random_state=42
+    )
 
-    def test_model_preprocess_for_serving(self):
-        features = self.model.preprocess(data=self.data)
+    model.fit(features=features, target=target) # pyrefly: ignore [bad-argument-type]
 
-        assert isinstance(features, pd.DataFrame)
-        assert features.shape[1] == len(self.FEATURES_COLS)
-        assert set(features.columns) == set(self.FEATURES_COLS)
+    predicted_target = model._model.predict(features_validation)    # pyrefly: ignore [missing-attribute]
 
-    def test_model_fit(self):
-        features, target = self.model.preprocess(data=self.data, target_column="delay")
+    report = classification_report(target_validation, predicted_target, output_dict=True)
 
-        _, features_validation, _, target_validation = train_test_split(
-            features, target, test_size=0.33, random_state=42
-        )
+    assert report["0"]["recall"] > 0.60     # pyrefly: ignore[bad-index]
+    assert report["0"]["f1-score"] > 0.70   # pyrefly: ignore[bad-index]
+    assert report["1"]["recall"] < 0.60     # pyrefly: ignore[bad-index]
+    assert report["1"]["f1-score"] < 0.30   # pyrefly: ignore[bad-index]
 
-        self.model.fit(features=features, target=target)
+def test_model_predict(data: pd.DataFrame, model: DelayModel):
+    """Test the predict method of the DelayModel."""
+    features: pd.DataFrame = model.preprocess(data=data)
+    predicted_targets = model.predict(features=features)
 
-        predicted_target = self.model._model.predict(features_validation)
-
-        report = classification_report(target_validation, predicted_target, output_dict=True)
-
-        assert report["0"]["recall"] < 0.60
-        assert report["0"]["f1-score"] < 0.70
-        assert report["1"]["recall"] > 0.60
-        assert report["1"]["f1-score"] > 0.30
-
-    def test_model_predict(self):
-        features = self.model.preprocess(data=self.data)
-
-        predicted_targets = self.model.predict(features=features)
-
-        assert isinstance(predicted_targets, list)
-        assert len(predicted_targets) == features.shape[0]
-        assert all(isinstance(predicted_target, int) for predicted_target in predicted_targets)
+    assert isinstance(predicted_targets, list)
+    assert len(predicted_targets) == features.shape[0]
+    assert all(isinstance(predicted_target, int) for predicted_target in predicted_targets)
