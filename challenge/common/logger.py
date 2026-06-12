@@ -3,7 +3,7 @@ import sys
 
 import structlog
 
-from challenge.utils.config import Environment, settings
+from challenge.common.config import Environment, settings
 
 
 def setup_logger(

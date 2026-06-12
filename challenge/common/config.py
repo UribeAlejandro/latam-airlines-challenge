@@ -21,7 +21,13 @@ class AppSettings(BaseSettings):
     project_name: str
     version: str
     description: str
+
+    # MLFlow
     mlflow_tracking_uri: str
+
+    # Model
+    model_path: str = "model/logistic_regression.pkl"
+    encoder_path: str = "model/encoder.pkl"
 
 
 settings = AppSettings()
