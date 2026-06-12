@@ -46,4 +46,4 @@ build:			## Build locally the python artifact
 
 .PHONY: run
 run:			## Run the API locally
-	uv run fastapi run challenge/api.py --port 8000
+	uv run fastapi dev challenge/api.py --port 8000

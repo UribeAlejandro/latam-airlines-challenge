@@ -69,7 +69,7 @@ jobs:
         run: |
           echo "Running tests..."
           make model-test
-          # make api-test
+          make api-test
 
   build:
     name: Build
