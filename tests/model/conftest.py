@@ -16,7 +16,6 @@ def data()-> pd.DataFrame:
 def etl(data: pd.DataFrame) -> ETL:
     """Fixture for the ETL instance."""
     etl = ETL()
-    etl.fit(data)
     return etl
 
 @pytest.fixture
