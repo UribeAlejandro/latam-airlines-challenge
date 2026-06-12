@@ -5,8 +5,9 @@ import pandas as pd
 import structlog
 from sklearn.linear_model import LogisticRegression
 
+from challenge.common.config import settings
 from challenge.constants import RANDOM_STATE
-from challenge.data.etl import transform_data
+from challenge.data.etl import ETL
 
 logger = structlog.get_logger(__name__)
 
@@ -14,8 +15,9 @@ logger = structlog.get_logger(__name__)
 class DelayModel:
     """Model for predicting flight delays."""
 
-    def __init__(self):
-        self.__model_path = "model/logistic_regression.pkl"
+    def __init__(self, etl: ETL):
+        self.__etl = etl
+        self.__model_path = settings.model_path
         self._model: LogisticRegression | None = None
 
     @property
@@ -52,7 +54,7 @@ class DelayModel:
             Features and target if target_column is set, otherwise only features.
         """
         logger.info("Preprocessing data.", data_shape=data.shape, target_column=target_column)
-        return transform_data(data, target_column=target_column)
+        return self.__etl.transform_data(data, target_column)
 
     def fit(self, features: pd.DataFrame, target: pd.DataFrame) -> None:
         """
