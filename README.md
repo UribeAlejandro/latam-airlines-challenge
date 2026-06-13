@@ -1,5 +1,7 @@
 # Software Engineer (ML & LLMs) Challenge
 
+[![Continuous Integration](https://github.com/UribeAlejandro/latam-airlines-challenge/actions/workflows/ci.yml/badge.svg)](https://github.com/UribeAlejandro/latam-airlines-challenge/actions/workflows/ci.yml) [![Continuous Delivery](https://github.com/UribeAlejandro/latam-airlines-challenge/actions/workflows/cd.yml/badge.svg)](https://github.com/UribeAlejandro/latam-airlines-challenge/actions/workflows/cd.yml)
+
 ## Overview
 
 Welcome to the **Software Engineer (ML & LLMs)** Application Challenge. In this, you will have the opportunity to get closer to a part of the reality of the role, and demonstrate your skills and knowledge in machine learning and cloud.
