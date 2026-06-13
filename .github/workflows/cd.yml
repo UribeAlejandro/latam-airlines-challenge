@@ -5,10 +5,6 @@ on:
 
   workflow_dispatch:
 
-  push:
-    branches:
-      - main
-
 env: ${{ vars }}
 
 permissions:
@@ -32,7 +28,7 @@ jobs:
           token_format: access_token
           credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
 
-      - name: Login to GCR
+      - name: Login to GAR
         uses: docker/login-action@v4
         with:
           registry: ${{ secrets.GAR_LOCATION }}-docker.pkg.dev
