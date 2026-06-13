@@ -17,6 +17,7 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-latest
 
+
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v6
@@ -27,6 +28,7 @@ jobs:
         with:
           token_format: access_token
           credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+          secrets: inherit
 
       - name: Login to GAR
         uses: docker/login-action@v4
@@ -34,6 +36,7 @@ jobs:
           registry: ${{ secrets.GAR_LOCATION }}-docker.pkg.dev
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
+          secrets: inherit
 
       - name: Build and Push
         uses: docker/build-push-action@v7
@@ -42,6 +45,7 @@ jobs:
           tags: |
             ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.REPOSITORY }}/${{ secrets.SERVICE }}:${{ github.sha }}
             ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.REPOSITORY }}/${{ secrets.SERVICE }}:latest
+          secrets: inherit
 
       - name: Deploy to Cloud Run
         id: deploy
@@ -56,3 +60,4 @@ jobs:
             PROJECT_NAME=${{ env.PROJECT_NAME }}
             VERSION=${{ env.VERSION }}
             DESCRIPTION=${{ env.DESCRIPTION }}
+          secrets: inherit
