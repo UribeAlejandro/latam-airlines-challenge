@@ -2,6 +2,7 @@ name: 'Continuous Delivery'
 
 on:
   workflow_call:
+    secrets: inherit
 
   workflow_dispatch:
 
@@ -16,6 +17,7 @@ jobs:
   deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
+
 
     steps:
       - name: Checkout repository code
